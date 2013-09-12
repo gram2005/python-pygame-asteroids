@@ -1,10 +1,17 @@
 import pygame
 import math
+import random
 
 class Base_image():
-    def __init__(self, image, x = 0, y = 0):
+    def __init__(self, image, x = 0, y = 0, v_x = 0, v_y = 0, angle = 0, angle_speed = 0):
         self.image = pygame.image.load(image).convert_alpha()
         self.display_image = self.image
+        self.x = x
+        self.y = y
+        self.v_x = v_x
+        self.v_y = v_y
+        self.angle = angle
+        self.angle_speed = angle_speed
         self.position = [x, y]
         
     def draw(self, screen):
@@ -14,16 +21,10 @@ class Base_image():
 class Ship(Base_image):
     def __init__(self, image, image_alt, x, y):
         self.image_alt = pygame.image.load(image_alt).convert_alpha()
-        self.v_x = 0
-        self.v_y = 0
-        self.x = x
-        self.y = y
-        self.angle_speed = 0
         self.acc = 0
-        self.angle = 0
         self.moving = False
         Base_image.__init__(self, image, x, y)
-        self.display_image = self.image
+        #self.display_image = self.image
         
     def set_angle_speed(self, value):
         self.angle_speed = value
@@ -67,6 +68,30 @@ class Ship(Base_image):
         #print (self.position, self.ship_center, self.v_x, self.v_y, self.moving)
         
         
+class Asteroid (Base_image):
+    def __init__(self, image):
+        x = random.randrange(0, 800)
+        y = random.randrange(0, 600)
+        v_x = random.random()*10 - 5
+        v_y = random.random()*10 - 5
+        angle = random.randrange(0, 360)
+        angle_speed = random.randrange(-10, 10)
+        Base_image.__init__(self, image, x, y, v_x, v_y, angle, angle_speed)
         
+    def update(self):
         
-     
+        self.angle += self.angle_speed
+        self.x += self.v_x
+        self.y -= self.v_y        
+
+
+        if 0 > self.x or self.x > 800:
+            self.x = self.x % 800
+        if 0 > self.y or self.y > 600:
+                self.y = self.y % 600      
+
+        #print(self.angle, self.angle_speed)        
+                
+        self.display_image = pygame.transform.rotozoom(self.image, self.angle, 1)        
+        self.aster_center = self.display_image.get_rect().center
+        self.position = [self.x - self.aster_center[0], self.y - self.aster_center[1]]

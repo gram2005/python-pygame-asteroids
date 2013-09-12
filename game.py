@@ -19,11 +19,16 @@ pygame.display.set_caption("Arto asteroidai")
 clock = pygame.time.Clock()
 
 ateroids_num = 10
+aster_list = []
 
 #images
 bg = Base_image("bg_nebula_blue.png")
 ship = Ship("ship1.png", "ship2.png", 400, 300)
-aster = pygame.image.load("asteroid_blue.png").convert_alpha()
+#aster = Asteroid("asteroid_blue.png")
+for x in range(ateroids_num):
+    aster = Asteroid("asteroid_blue.png")
+    aster_list.append(aster)
+#aster = pygame.image.load("asteroid_blue.png").convert_alpha()
 
 done = False
 
@@ -60,6 +65,10 @@ while done == False:
     # game logic
     
     ship.update()
+    #aster.update()
+    
+    for aster in aster_list:
+        aster.update()    
 
 ################################################################################    
     # drawing
@@ -67,8 +76,12 @@ while done == False:
     
     bg.draw(screen)
     ship.draw(screen)
+    #aster.draw(screen)
+    
+    for aster in aster_list:
+        aster.draw(screen)
 
-    screen.blit(aster, [100, 100])
+    #screen.blit(aster, [100, 100])
 
     pygame.display.flip()
 
