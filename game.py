@@ -20,15 +20,15 @@ clock = pygame.time.Clock()
 
 ateroids_num = 10
 aster_list = []
+missile_list = []
 
 #images
 bg = Base_image("bg_nebula_blue.png")
 ship = Ship("ship1.png", "ship2.png", 400, 300)
-#aster = Asteroid("asteroid_blue.png")
 for x in range(ateroids_num):
     aster = Asteroid("asteroid_blue.png")
     aster_list.append(aster)
-#aster = pygame.image.load("asteroid_blue.png").convert_alpha()
+
 
 done = False
 
@@ -50,6 +50,9 @@ while done == False:
             if event.key == pygame.K_UP:
                 ship.set_acc(5)
                 ship.switch_state(True)
+            if event.key == pygame.K_SPACE:
+                x, y = ship.get_missile_coord()
+                missile_list.append(Missile("shot2.png", x, y))
               
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -65,10 +68,12 @@ while done == False:
     # game logic
     
     ship.update()
-    #aster.update()
     
     for aster in aster_list:
-        aster.update()    
+        aster.update()
+        
+    for mis in missile_list:
+        mis.update()
 
 ################################################################################    
     # drawing
@@ -76,12 +81,12 @@ while done == False:
     
     bg.draw(screen)
     ship.draw(screen)
-    #aster.draw(screen)
     
     for aster in aster_list:
         aster.draw(screen)
-
-    #screen.blit(aster, [100, 100])
+        
+    for mis in missile_list:
+            mis.draw(screen)
 
     pygame.display.flip()
 

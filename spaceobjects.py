@@ -49,6 +49,12 @@ class Ship(Base_image):
         
     def get_angle(self):
         return self.angle
+    
+    def get_missile_coord(self):
+        self.obj_center = self.display_image.get_rect().center
+        tmp_x = 35 * math.cos(math.radians(self.angle))
+        tmp_y = 35 * math.sin(math.radians(self.angle))
+        return self.x + tmp_x, self.y - tmp_y
         
     def set_acc(self, value):
         self.acc = value
@@ -71,7 +77,7 @@ class Ship(Base_image):
             self.acc = 0
         
        
-class Asteroid (Base_image):
+class Asteroid(Base_image):
     def __init__(self, image):
         x = random.randrange(0, 800)
         y = random.randrange(0, 600)
@@ -80,3 +86,9 @@ class Asteroid (Base_image):
         angle = random.randrange(0, 360)
         angle_speed = random.randrange(-10, 10)
         Base_image.__init__(self, image, x, y, v_x, v_y, angle, angle_speed)
+        
+        
+class Missile(Base_image):
+    def __init__(self, image, x, y):
+        Base_image.__init__(self, image, x, y)
+    
