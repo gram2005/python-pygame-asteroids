@@ -18,7 +18,7 @@ pygame.display.set_caption("Arto asteroidai")
 clock = pygame.time.Clock()
 
 #images
-bg = pygame.image.load("bg_nebula_blue.png").convert()
+#bg = pygame.image.load("bg_nebula_blue.png").convert_alpha()
 ship_no_ac = pygame.image.load("ship1.png").convert_alpha()
 ship_ac = pygame.image.load("ship2.png").convert_alpha()
 aster = pygame.image.load("asteroid_blue.png").convert_alpha()
@@ -38,7 +38,29 @@ o_ship = ship
 moving = False
 
 done = False
-
+class baseImage():
+    def __init__(self, x = 0, y = 0):
+        self.imgage = pygame.image.load("bg_nebula_blue.png").convert_alpha()
+        self.position = [x, y]
+        
+    def draw(self, screen):
+        screen.blit(self.imgage, self.position)
+        
+#class Asteroid(x, y, v_x, v_y, angle_speed):
+    #def __init__():
+        #self.image = pygame.image.load("asteroid_blue.png").convert_alpha()
+        #self.angle = 0
+        #self.angle_speed = angle_speed
+        #self.v_x = v_x
+        #self.v_y = v_y
+        #self.position = [x, y]
+        #pass
+    #def update():
+        #self.angle += self.angle_speed
+        #self.position = [self.position[0] + self.v_x, self.position[1] + self.v_y]
+    #def draw():
+        #pass
+bg = baseImage(0, 0)
 ################################################################################    
 while done == False:
     # event processing
@@ -97,7 +119,8 @@ while done == False:
     # drawing
     screen.fill(white)
     
-    screen.blit(bg, [0,0])
+    #screen.blit(bg, [0,0])
+    bg.draw(screen)
     screen.blit(ship, [ship_x - ship_center[0],ship_y - ship_center[1]])
     screen.blit(aster, [100, 100])
 
