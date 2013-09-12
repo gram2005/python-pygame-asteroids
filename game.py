@@ -52,7 +52,8 @@ while done == False:
                 ship.switch_state(True)
             if event.key == pygame.K_SPACE:
                 x, y = ship.get_missile_coord()
-                missile_list.append(Missile("shot2.png", x, y))
+                v_x, v_y = ship.get_missile_speed()
+                missile_list.append(Missile("shot2.png", x, y, v_x, v_y))
               
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -72,8 +73,16 @@ while done == False:
     for aster in aster_list:
         aster.update()
         
+    rem_missile_list = []    
     for mis in missile_list:
-        mis.update()
+        if mis.is_alive():
+            mis.update()
+        else:
+            rem_missile_list.append(mis)
+            
+    for mis in rem_missile_list:
+        missile_list.remove(mis)
+
 
 ################################################################################    
     # drawing

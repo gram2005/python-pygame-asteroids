@@ -55,6 +55,11 @@ class Ship(Base_image):
         tmp_x = 35 * math.cos(math.radians(self.angle))
         tmp_y = 35 * math.sin(math.radians(self.angle))
         return self.x + tmp_x, self.y - tmp_y
+    
+    def get_missile_speed(self):
+        temp_v_x = 5 * math.cos(math.radians(self.angle))
+        temp_v_y = 5 * math.sin(math.radians(self.angle))
+        return self.v_x + temp_v_x, self.v_y + temp_v_y
         
     def set_acc(self, value):
         self.acc = value
@@ -89,6 +94,16 @@ class Asteroid(Base_image):
         
         
 class Missile(Base_image):
-    def __init__(self, image, x, y):
-        Base_image.__init__(self, image, x, y)
+
+    def __init__(self, image, x, y, v_x, v_y):
+        Base_image.__init__(self, image, x, y, v_x, v_y)
+        self.live_cnt = 0
+        
+    def is_alive(self):
+        self.live_cnt += 1
+        if self.live_cnt < 50:
+            return True
+        return False
+        
+
     
