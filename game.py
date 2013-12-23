@@ -36,6 +36,7 @@ done = False
 ################################################################################    
 while done == False:
     # event processing
+    # print(ship.display_image.get_rect())
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -67,22 +68,39 @@ while done == False:
                 
 ################################################################################        
     # game logic
-    
-    ship.update()
-    
+
+    rem_aster_list = []
+    rem_missile_list = []
     for aster in aster_list:
-        aster.update()
+        for mis in missile_list:
+            if mis.check_collision(aster):
+                rem_missile_list.append(mis)
+                rem_aster_list.append(aster)
+
+        if ship.check_collision(aster):
+            rem_aster_list.append(aster)
+            
+    for mis in rem_missile_list:
+        missile_list.remove(mis)
+
+    for aster in rem_aster_list:
+        aster_list.remove(aster)
         
-    rem_missile_list = []    
+    rem_missile_list = []
     for mis in missile_list:
         if mis.is_alive():
             mis.update()
         else:
             rem_missile_list.append(mis)
-            
+
     for mis in rem_missile_list:
         missile_list.remove(mis)
-
+        
+    
+    ship.update()
+    
+    for aster in aster_list:
+        aster.update()
 
 ################################################################################    
     # drawing
