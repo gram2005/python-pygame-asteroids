@@ -13,9 +13,8 @@ class Base_image():
         self.angle = angle
         self.angle_speed = angle_speed
         self.position = [x, y]
-        self.collision_rect = self.display_image.get_rect().size
-##        print(type(self.display_image.get_rect()))
-##        print(self.collision_rect)
+        self.collision_radius = int(self.display_image.get_rect().size[0] // 2 * 0.9)
+        self.obj_center = self.display_image.get_rect().center
         
     def update(self, alt = False):
         
@@ -40,18 +39,9 @@ class Base_image():
         screen.blit(self.display_image, self.position)
 
     def check_collision(self, another_obj):
-
-        obj1_rect = pygame.Rect(self.x, self.y,
-                                self.collision_rect[0] - self.collision_rect[0] * 0.1,
-                                self.collision_rect[1] - self.collision_rect[1] * 0.1)
-        obj2_rect = pygame.Rect(another_obj.x, another_obj.y,
-                                another_obj.collision_rect[0] - another_obj.collision_rect[0] * 0.1,
-                                another_obj.collision_rect[1] - another_obj.collision_rect[1] * 0.1)
-
-##        print ("ship: ", obj1_rect, " Obj: ", obj2_rect, obj1_rect.colliderect(obj2_rect))
-        
-        return obj1_rect.colliderect(obj2_rect)
-        
+        distance_between_objs = int (((self.x - another_obj.x) ** 2 + (self.y - another_obj.y) ** 2) ** 0.5)
+        collision_distance = self.collision_radius + another_obj.collision_radius
+        return distance_between_objs <= collision_distance
         
 class Ship(Base_image):
     def __init__(self, image, image_alt, x, y):
