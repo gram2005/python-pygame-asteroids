@@ -1,6 +1,4 @@
 import pygame
-import os
-import math
 from spaceobjects import *
 
 pygame.init()
@@ -10,8 +8,6 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
-
-#default_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sprites'))
 
 #pygame stuff
 screen = pygame.display.set_mode([800, 600])
@@ -27,7 +23,7 @@ done = False
 background = Base_image("bg_nebula_blue.png")
 
  ################################################################################
-while done == False:
+while not done:
     # event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -67,15 +63,15 @@ while done == False:
     # game logic
 
     if game_state in ['not started', 'game over']:
-        start_text1= basic_font.render('PRESS ENTER', True, white)
-        start_text2= basic_font.render('TO START THE GAME', True, white)
+        start_text1 = basic_font.render('PRESS ENTER', True, white)
+        start_text2 = basic_font.render('TO START THE GAME', True, white)
 
     if game_state == 'started':
         max_num_of_asteroids = 10
         asteroid_list = []
         missile_list = []
-        ateroid_timer = 0
-        num_of_lifes = 3
+        asteroid_timer = 0
+        num_of_lives = 3
         score = 0
 
         ship = Ship("ship1.png", "ship2.png", 400, 300)
@@ -96,8 +92,8 @@ while done == False:
 
             if ship.check_collision(asteroid):
                 rem_asteroid_list.append(asteroid)
-                num_of_lifes -= 1
-                if num_of_lifes == 0:
+                num_of_lives -= 1
+                if num_of_lives == 0:
                     game_state = 'game over'
 
         for missile in rem_missile_list:
@@ -128,21 +124,21 @@ while done == False:
         ship.update()
 
         if len(asteroid_list) < max_num_of_asteroids:
-            ateroid_timer += 1
+            asteroid_timer += 1
 
-        if ateroid_timer == 60:
+        if asteroid_timer == 60:
             asteroid = Asteroid("asteroid_blue.png")
             asteroid_list.append(asteroid)
-            ateroid_timer = 0
+            asteroid_timer = 0
 
         for asteroid in asteroid_list:
             asteroid.update()
 
-        life_text = basic_font.render('Lifes: ' + str(num_of_lifes), True, white)
+        life_text = basic_font.render('Lives: ' + str(num_of_lives), True, white)
         score_text = basic_font.render('Score: ' + str(score), True, white)
 
     if game_state == 'game over':
-        game_over_text= game_over_font.render('GAME OVER', True, white)
+        game_over_text = game_over_font.render('GAME OVER', True, white)
 
  ################################################################################
     # drawing
