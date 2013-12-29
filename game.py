@@ -10,8 +10,6 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
-num_of_lifes = 3
-score = 0
 
 #default_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sprites'))
 
@@ -19,26 +17,23 @@ score = 0
 screen = pygame.display.set_mode([800, 600])
 pygame.display.set_caption("Arto asteroidai")
 clock = pygame.time.Clock()
-basicFont = pygame.font.SysFont(None, 42)
+basic_font = pygame.font.SysFont(None, 42)
+game_over_font = pygame.font.SysFont(None, 60)
 
-max_num_of_ateroids = 10
-asteroid_list = []
-missile_list = []
-ateroid_timer = 0
 game_state = 'not started'
 done = False
 
 #images
 background = Base_image("bg_nebula_blue.png")
 
-################################################################################    
+ ################################################################################
 while done == False:
     # event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
 
-        if game_state == 'not started':
+        if game_state in ['not started', 'game over']:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_state = 'started'
 
@@ -68,17 +63,23 @@ while done == False:
                 if event.key == pygame.K_UP:
                     ship.switch_state(False)
                 
-################################################################################        
+ ################################################################################
     # game logic
 
-    if game_state == 'not started':
-        start_text1= basicFont.render('PRESS ENTER', True, white)
-        start_text2= basicFont.render('TO START THE GAME', True, white)
+    if game_state in ['not started', 'game over']:
+        start_text1= basic_font.render('PRESS ENTER', True, white)
+        start_text2= basic_font.render('TO START THE GAME', True, white)
 
     if game_state == 'started':
+        max_num_of_asteroids = 10
+        asteroid_list = []
+        missile_list = []
+        ateroid_timer = 0
+        num_of_lifes = 3
+        score = 0
 
         ship = Ship("ship1.png", "ship2.png", 400, 300)
-        for x in range(max_num_of_ateroids):
+        for x in range(max_num_of_asteroids):
             asteroid = Asteroid("asteroid_blue.png")
             asteroid_list.append(asteroid)
         game_state = 'running'
@@ -91,11 +92,13 @@ while done == False:
                 if missile.check_collision(asteroid):
                     rem_missile_list.append(missile)
                     rem_asteroid_list.append(asteroid)
-                    score += 1010
+                    score += 10
 
             if ship.check_collision(asteroid):
                 rem_asteroid_list.append(asteroid)
                 num_of_lifes -= 1
+                if num_of_lifes == 0:
+                    game_state = 'game over'
 
         for missile in rem_missile_list:
             try:
@@ -124,7 +127,7 @@ while done == False:
 
         ship.update()
 
-        if len(asteroid_list) < max_num_of_ateroids:
+        if len(asteroid_list) < max_num_of_asteroids:
             ateroid_timer += 1
 
         if ateroid_timer == 60:
@@ -135,17 +138,19 @@ while done == False:
         for asteroid in asteroid_list:
             asteroid.update()
 
-        life_text = basicFont.render('Lifes: ' + str(num_of_lifes), True, white)
-        score_text = basicFont.render('Score: ' + str(score), True, white)
+        life_text = basic_font.render('Lifes: ' + str(num_of_lifes), True, white)
+        score_text = basic_font.render('Score: ' + str(score), True, white)
 
+    if game_state == 'game over':
+        game_over_text= game_over_font.render('GAME OVER', True, white)
 
-################################################################################    
+ ################################################################################
     # drawing
     screen.fill(white)
     
     background.draw(screen)
 
-    if game_state == 'not started':
+    if game_state in ['not started', 'game over']:
         pygame.draw.rect(screen, white, (200,100,400,400), 10)
         screen.blit(start_text1, (295,250))
         screen.blit(start_text2, (250,330))
@@ -162,9 +167,13 @@ while done == False:
         screen.blit(life_text, (688,10))
         screen.blit(score_text, (10,10))
 
+    if game_state == 'game over':
+        screen.blit(game_over_text, (275,170))
+
+
     pygame.display.flip()
 
-################################################################################
+ ################################################################################
     # clock
     clock.tick(60)
     
