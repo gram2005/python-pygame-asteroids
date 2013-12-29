@@ -92,8 +92,8 @@ class Asteroid(Base_image):
     def __init__(self, image):
         x = random.randrange(0, 800)
         y = random.randrange(0, 600)
-        v_x = random.random()*6 - 3
-        v_y = random.random()*6 - 3
+        v_x = random.randrange(-3, 3) * random.random()
+        v_y = random.randrange(-3, 3) * random.random()
         angle = random.randrange(0, 360)
         angle_speed = random.randrange(-10, 10)
         Base_image.__init__(self, image, x, y, v_x, v_y, angle, angle_speed)
@@ -110,6 +110,3 @@ class Missile(Base_image):
         if self.live_cnt < 50:
             return True
         return False
-        
-
-    
